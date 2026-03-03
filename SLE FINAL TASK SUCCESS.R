@@ -129,12 +129,23 @@ probes_plot <- intersect(top50_list$PROBEID, rownames(ex))
 mat_heatmap <- ex[probes_plot, ]
 
 # Penamaan baris yang unik (Gen Symbol)
+
+# 1. Siapkan data anotasi kolom agar lebih rapi
+annot_col <- data.frame(Group = gset$group)
+rownames(annot_col) <- colnames(ex)
+
 rownames(mat_heatmap) <- make.unique(as.character(top50_list$SYMBOL[match(probes_plot, top50_list$PROBEID)]))
 
 pheatmap(mat_heatmap, scale = "row", 
          annotation_col = data.frame(Group = gset$group, row.names = colnames(ex)),
          color = colorRampPalette(c("navy", "white", "firebrick3"))(100),
-         main = "Top 50 Gen: Interferon Signature Detected", show_colnames = FALSE)
+         main = "Top 50 Gen: Interferon Signature Detected",
+         fontsize = 7,
+         show_colnames = FALSE)
+# Simpan ke PNG (Sangat tajam untuk PowerPoint/Word)
+png("Heatmap_SLE_Final.png", width = 2000, height = 3000, res = 300)
+# ... masukkan kode pheatmap Anda di sini ...
+dev.off()
 
 # --- PART 7: PENYIMPANAN ---
 write.csv(topTableResults, "Hasil_Analisis_SLE_GSE20864_Lengkap.csv", row.names = FALSE)
