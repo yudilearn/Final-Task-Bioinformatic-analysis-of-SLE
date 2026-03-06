@@ -104,6 +104,48 @@ topTableResults$GENENAME <- feature_info$`Gene title`[match(topTableResults$PROB
 # Simpan versi bersih tanpa NA untuk visualisasi
 topTable_clean <- topTableResults %>% filter(!is.na(SYMBOL) & SYMBOL != "")
 
+group_colors <- as.numeric(gset$group)
+
+boxplot(
+  ex,
+  col = group_colors,
+  las = 2,
+  outline = FALSE,
+  main = "Boxplot Distribusi Nilai Ekspresi per Sampel",
+  ylab = "Expression Value (log2)"
+)
+
+legend(
+  "topright",
+  legend = levels(gset$group),
+  fill = unique(group_colors),
+  cex = 0.8
+)
+
+
+#PART I.2 DISTRIBUSI NILAI EKSPRESI (DENSITY PLOT) 
+
+#Density plot menunjukkan sebaran global nilai ekspresi gen
+#Digunakan untuk:
+#- Mengecek efek log-transform
+#- Membandingkan distribusi antar grup
+
+#Gabungkan ekspresi & grup ke data frame
+expr_long <- data.frame(
+  Expression = as.vector(ex),
+  Group = rep(gset$group, each = nrow(ex))
+)
+
+ggplot(expr_long, aes(x = Expression, color = Group)) +
+  geom_density(linewidth = 1) +
+  theme_minimal() +
+  labs(
+    title = "Distribusi Nilai Ekspresi Gen",
+    x = "Expression Value (log2)",
+    y = "Density"
+  )
+
+
 # --- PART 6: VISUALISASI ---
 
 # A. UMAP (Melihat pengelompokan sampel)
